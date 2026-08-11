@@ -1,0 +1,678 @@
+/* VAT Toggle Styles */
+
+/* CSS Custom Properties for dynamic styling */
+:root {
+  --vat-primary-color: #000000;
+  --vat-background-color: #f4f4f4;
+  --vat-active-text-color: #ffffff;
+  --vat-border-radius: 6px;
+  --vat-btn-border-radius: 4px;
+}
+
+/* Container - adapts to header or other placements */
+.vat-toggle-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  line-height: 1;
+  /* Prevent flex containers from squeezing this element */
+  flex-shrink: 0;
+  flex-grow: 0;
+  min-width: fit-content;
+  width: auto;
+}
+
+.vat-toggle-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4px 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Main Toggle Container */
+.vat-toggle {
+  display: inline-flex;
+  background: var(--vat-background-color, #f4f4f4);
+  border-radius: var(--vat-border-radius, 6px);
+  padding: 3px;
+  gap: 2px;
+  align-items: stretch;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+/* Toggle Button Base Styles */
+.vat-toggle-btn {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+  border-radius: var(--vat-btn-border-radius, 4px);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  box-sizing: border-box;
+}
+
+.vat-toggle-btn:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.vat-toggle-btn.active {
+  background: var(--vat-primary-color, #000);
+  color: var(--vat-active-text-color, #fff);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.vat-toggle-btn:focus {
+  outline: 2px solid #005bd3;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   TOGGLE STYLES
+   ============================================ */
+
+/* Pill Style (Default) */
+.vat-toggle.vat-toggle--pill {
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.vat-toggle.vat-toggle--pill .vat-toggle-btn {
+  border-radius: 999px;
+  padding: 6px 16px;
+}
+
+/* Buttons Style */
+.vat-toggle.vat-toggle--buttons {
+  background: transparent;
+  padding: 0;
+  gap: 8px;
+}
+
+.vat-toggle.vat-toggle--buttons .vat-toggle-btn {
+  border: 2px solid var(--vat-background-color, #e0e0e0);
+  background: transparent;
+  border-radius: var(--vat-border-radius, 6px);
+  padding: 6px 14px;
+}
+
+.vat-toggle.vat-toggle--buttons .vat-toggle-btn:hover {
+  border-color: var(--vat-primary-color, #000);
+  background: transparent;
+}
+
+.vat-toggle.vat-toggle--buttons .vat-toggle-btn.active {
+  border-color: var(--vat-primary-color, #000);
+  background: var(--vat-primary-color, #000);
+  color: var(--vat-active-text-color, #fff);
+}
+
+/* Switch Style */
+.vat-toggle.vat-toggle--switch {
+  background: var(--vat-background-color, #f4f4f4);
+  border-radius: 999px;
+  padding: 2px;
+  position: relative;
+}
+
+.vat-toggle.vat-toggle--switch .vat-toggle-btn {
+  background: transparent;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  z-index: 1;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.vat-toggle.vat-toggle--switch .vat-toggle-btn.active {
+  background: var(--vat-primary-color, #000);
+  color: var(--vat-active-text-color, #fff);
+}
+
+.vat-toggle.vat-toggle--switch .vat-toggle-btn:hover:not(.active) {
+  background: transparent;
+  color: var(--vat-primary-color, #000);
+}
+
+/* Minimal Style */
+.vat-toggle.vat-toggle--minimal {
+  background: transparent;
+  padding: 0;
+  gap: 4px;
+}
+
+.vat-toggle.vat-toggle--minimal .vat-toggle-btn {
+  background: transparent;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #888;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+}
+
+.vat-toggle.vat-toggle--minimal .vat-toggle-btn:hover {
+  color: var(--vat-primary-color, #000);
+  background: transparent;
+}
+
+.vat-toggle.vat-toggle--minimal .vat-toggle-btn.active {
+  background: transparent;
+  color: var(--vat-primary-color, #000);
+  border-bottom-color: var(--vat-primary-color, #000);
+  box-shadow: none;
+}
+
+/* ============================================
+   ANIMATION STYLES
+   ============================================ */
+
+/* Smooth Animation (Default) */
+.vat-toggle.vat-toggle--animation-smooth .vat-toggle-btn {
+  transition: all 0.2s ease;
+}
+
+/* Bounce Animation */
+.vat-toggle.vat-toggle--animation-bounce .vat-toggle-btn.active {
+  animation: vatBounce 0.3s ease;
+}
+
+@keyframes vatBounce {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* No Animation */
+.vat-toggle.vat-toggle--animation-none .vat-toggle-btn {
+  transition: none;
+}
+
+/* ============================================
+   VAT INDICATOR
+   ============================================ */
+
+.vat-indicator {
+  font-size: 0.75em;
+  color: #666;
+  font-weight: normal;
+}
+
+.vat-indicator--before {
+  margin-right: 4px;
+}
+
+.vat-indicator--after {
+  margin-left: 4px;
+}
+
+.vat-indicator--below {
+  display: block;
+  margin-top: 2px;
+  margin-left: 0;
+}
+
+/* ============================================
+   POPUP STYLES
+   ============================================ */
+
+.vat-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.vat-popup {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: popupFadeIn 0.3s ease;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.vat-popup-title {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.vat-popup-message {
+  margin: 0 0 24px;
+  font-size: 15px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.vat-popup-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.vat-popup-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border: 2px solid #e0e0e0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.vat-popup-btn:hover {
+  border-color: var(--vat-primary-color, #000);
+  background: var(--vat-primary-color, #000);
+  color: var(--vat-active-text-color, #fff);
+}
+
+.vat-popup-btn:focus {
+  outline: 2px solid #005bd3;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   HEADER-SPECIFIC STYLES
+   ============================================ */
+
+/* When placed in header sections - prevent compression and position left */
+header .vat-toggle-container,
+.header .vat-toggle-container,
+.site-header .vat-toggle-container,
+.shopify-section-header .vat-toggle-container,
+.header__icons .vat-toggle-container,
+.header-icons .vat-toggle-container,
+[class*="header"] .vat-toggle-container {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: auto;
+  min-height: 100%;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  min-width: fit-content !important;
+  width: auto !important;
+  overflow: visible !important;
+  /* Try to position before other items */
+  order: -1 !important;
+  margin-right: auto !important;
+}
+
+header .vat-toggle-wrapper,
+.header .vat-toggle-wrapper,
+.site-header .vat-toggle-wrapper,
+.shopify-section-header .vat-toggle-wrapper,
+.header__icons .vat-toggle-wrapper,
+.header-icons .vat-toggle-wrapper,
+[class*="header"] .vat-toggle-wrapper {
+  margin: 0;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* Compact toggle for header context */
+header .vat-toggle,
+.header .vat-toggle,
+.site-header .vat-toggle,
+.shopify-section-header .vat-toggle,
+.header__icons .vat-toggle,
+.header-icons .vat-toggle,
+[class*="header"] .vat-toggle {
+  margin: 0;
+  flex-shrink: 0;
+  overflow: visible;
+  padding: 2px;
+  gap: 1px;
+}
+
+/* Smaller buttons in header */
+header .vat-toggle-btn,
+.header .vat-toggle-btn,
+.site-header .vat-toggle-btn,
+.shopify-section-header .vat-toggle-btn,
+.header__icons .vat-toggle-btn,
+.header-icons .vat-toggle-btn,
+[class*="header"] .vat-toggle-btn {
+  padding: 4px 10px !important;
+  font-size: 11px !important;
+  min-height: 24px !important;
+}
+
+/* Fix for Dawn theme and similar themes with icon-based headers */
+.header__icon .vat-toggle-container,
+[class*="icon"] .vat-toggle-container {
+  width: auto !important;
+  min-width: fit-content !important;
+  flex-shrink: 0 !important;
+  order: -1 !important;
+}
+
+/* When the block is placed as a direct child of header icons container */
+.header__icons > .vat-toggle-container,
+.header-icons > .vat-toggle-container {
+  order: -10 !important;
+}
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .vat-toggle-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    min-height: 24px;
+  }
+
+  .vat-toggle.vat-toggle--pill .vat-toggle-btn {
+    padding: 5px 12px;
+  }
+
+  .vat-toggle.vat-toggle--buttons .vat-toggle-btn {
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vat-toggle-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-height: 22px;
+  }
+
+  .vat-popup {
+    padding: 24px;
+  }
+
+  .vat-popup-buttons {
+    flex-direction: column;
+  }
+
+  .vat-popup-btn {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .vat-toggle:not([style*="background"]) {
+    background: #2a2a2a;
+  }
+
+  .vat-toggle-btn:not(.active) {
+    color: #aaa;
+  }
+
+  .vat-toggle-btn:not(.active):hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .vat-toggle.vat-toggle--buttons .vat-toggle-btn:not(.active) {
+    border-color: #444;
+  }
+
+  .vat-toggle.vat-toggle--minimal .vat-toggle-btn:not(.active) {
+    color: #888;
+  }
+
+  .vat-indicator {
+    color: #999;
+  }
+
+  .vat-popup {
+    background: #1a1a1a;
+  }
+
+  .vat-popup-title {
+    color: #fff;
+  }
+
+  .vat-popup-message {
+    color: #aaa;
+  }
+
+  .vat-popup-btn {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #fff;
+  }
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+.vat-toggle-container.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.vat-toggle-container.loading .vat-toggle {
+  animation: vatPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes vatPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+/* ============================================
+   FLOATING TOGGLE STYLES
+   ============================================ */
+
+/* Floating container - fixed position in corner */
+.vat-toggle-container.vat-toggle--floating {
+  position: fixed !important;
+  z-index: 9998;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  animation: vatFloatIn 0.3s ease-out;
+  transition: all 0.3s ease;
+  /* Reset inline styles that might conflict */
+  display: block !important;
+  min-width: auto !important;
+  width: auto !important;
+}
+
+/* Default position: bottom-right */
+.vat-toggle--floating {
+  bottom: 24px;
+  right: 24px;
+}
+
+/* Floating toggle wrapper */
+.vat-toggle--floating .vat-toggle-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+/* Floating toggle buttons - slightly larger for touch */
+.vat-toggle--floating .vat-toggle-btn {
+  padding: 8px 16px !important;
+  font-size: 13px !important;
+  min-height: 32px !important;
+}
+
+/* Minimize button */
+.vat-toggle-minimize {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  padding: 0;
+  color: #666;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.vat-toggle-minimize:hover {
+  background: #f5f5f5;
+  transform: scale(1.1);
+  color: #333;
+}
+
+.vat-toggle-minimize:focus {
+  outline: 2px solid #005bd3;
+  outline-offset: 2px;
+}
+
+.vat-toggle-minimize svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Minimized state - collapsed to small circle */
+.vat-toggle--floating.vat-toggle--minimized {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.vat-toggle--minimized .vat-toggle-wrapper {
+  display: none !important;
+}
+
+.vat-toggle--minimized .vat-toggle-minimize {
+  display: none;
+}
+
+.vat-toggle--minimized .vat-toggle-minimized-icon {
+  display: flex !important;
+}
+
+/* Minimized icon (hidden by default) */
+.vat-toggle-minimized-icon {
+  display: none;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--vat-primary-color, #000);
+  letter-spacing: -0.5px;
+}
+
+/* Hover effect on minimized state */
+.vat-toggle--minimized:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.16);
+}
+
+/* Entry animation */
+@keyframes vatFloatIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile positioning - above typical mobile nav bars */
+@media (max-width: 768px) {
+  .vat-toggle--floating {
+    bottom: 80px;
+    right: 16px;
+  }
+
+  .vat-toggle--floating .vat-toggle-btn {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .vat-toggle--floating.vat-toggle--minimized {
+    width: 44px;
+    height: 44px;
+  }
+
+  .vat-toggle--minimized .vat-toggle-minimized-icon {
+    font-size: 12px;
+  }
+}
+
+/* Dark mode for floating toggle */
+@media (prefers-color-scheme: dark) {
+  .vat-toggle--floating {
+    background: #1a1a1a;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .vat-toggle-minimize {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #aaa;
+  }
+
+  .vat-toggle-minimize:hover {
+    background: #333;
+    color: #fff;
+  }
+
+  .vat-toggle--minimized .vat-toggle-minimized-icon {
+    color: #fff;
+  }
+}

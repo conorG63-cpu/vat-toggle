@@ -1,0 +1,221 @@
+{% comment %}
+  PriceSwitch App Embed
+  This is an App Embed that renders the floating VAT toggle site-wide.
+  Enable in Theme Customizer > App Embeds to show on all pages.
+  
+  Settings Priority:
+  1. App metafields (synced from admin) - used in theme editor and live
+  2. Block settings (fallback for initial setup)
+{% endcomment %}
+
+{% comment %} 
+  Read settings from app metafields (synced from admin)
+  App-owned metafields use namespace "$app:vat_toggle" in GraphQL,
+  but are accessed as app.metafields.vat_toggle in Liquid.
+  JSON type metafields are automatically parsed by Shopify.
+{% endcomment %}
+{% assign app_settings = app.metafields.vat_toggle.settings.value %}
+
+{% comment %} 
+  All settings come from app metafields (synced from admin).
+  Block settings only control enabled/disabled state.
+  Fallback to sensible defaults if metafield not yet synced.
+{% endcomment %}
+{% assign has_app_settings = false %}
+{% if app_settings and app_settings != blank %}
+  {% assign has_app_settings = true %}
+{% endif %}
+
+{% comment %} VAT Rate - use != nil check since 0 is valid {% endcomment %}
+{% if has_app_settings and app_settings.defaultVatRate != nil %}
+  {% assign vat_rate = app_settings.defaultVatRate %}
+{% else %}
+  {% assign vat_rate = 20 %}
+{% endif %}
+
+{% comment %} Display mode {% endcomment %}
+{% if has_app_settings and app_settings.defaultDisplayMode %}
+  {% assign default_mode = app_settings.defaultDisplayMode %}
+{% else %}
+  {% assign default_mode = 'inclusive' %}
+{% endif %}
+
+{% comment %} Labels {% endcomment %}
+{% if has_app_settings and app_settings.inclusiveLabel %}
+  {% assign inclusive_label = app_settings.inclusiveLabel %}
+{% else %}
+  {% assign inclusive_label = 'Inc. VAT' %}
+{% endif %}
+
+{% if has_app_settings and app_settings.exclusiveLabel %}
+  {% assign exclusive_label = app_settings.exclusiveLabel %}
+{% else %}
+  {% assign exclusive_label = 'Ex. VAT' %}
+{% endif %}
+
+{% comment %} Popup settings {% endcomment %}
+{% if has_app_settings and app_settings.showPopupOnFirstVisit != nil %}
+  {% assign show_popup = app_settings.showPopupOnFirstVisit %}
+{% else %}
+  {% assign show_popup = true %}
+{% endif %}
+
+{% if has_app_settings and app_settings.popupTitle %}
+  {% assign popup_title = app_settings.popupTitle %}
+{% else %}
+  {% assign popup_title = 'How would you like to see prices?' %}
+{% endif %}
+
+{% if has_app_settings and app_settings.popupMessage %}
+  {% assign popup_message = app_settings.popupMessage %}
+{% else %}
+  {% assign popup_message = 'Choose your preferred pricing display' %}
+{% endif %}
+
+{% comment %} Style settings {% endcomment %}
+{% if has_app_settings and app_settings.toggleStyle %}
+  {% assign toggle_style = app_settings.toggleStyle %}
+{% else %}
+  {% assign toggle_style = 'pill' %}
+{% endif %}
+
+{% if has_app_settings and app_settings.primaryColor %}
+  {% assign primary_color = app_settings.primaryColor %}
+{% else %}
+  {% assign primary_color = '#000000' %}
+{% endif %}
+
+{% if has_app_settings and app_settings.backgroundColor %}
+  {% assign background_color = app_settings.backgroundColor %}
+{% else %}
+  {% assign background_color = '#f4f4f4' %}
+{% endif %}
+
+{% if has_app_settings and app_settings.activeTextColor %}
+  {% assign active_text_color = app_settings.activeTextColor %}
+{% else %}
+  {% assign active_text_color = '#ffffff' %}
+{% endif %}
+
+{% if has_app_settings and app_settings.borderRadius %}
+  {% assign border_radius = app_settings.borderRadius %}
+{% else %}
+  {% assign border_radius = 'medium' %}
+{% endif %}
+
+{% if has_app_settings and app_settings.animationStyle %}
+  {% assign animation_style = app_settings.animationStyle %}
+{% else %}
+  {% assign animation_style = 'smooth' %}
+{% endif %}
+
+{% if block.settings.enabled %}
+<style>
+  /* Critical inline styles for floating toggle */
+  #vat-toggle-container {
+    position: fixed !important;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9998;
+    --vat-primary-color: {{ primary_color }};
+    --vat-background-color: {{ background_color }};
+    --vat-active-text-color: {{ active_text_color }};
+  }
+</style>
+
+<div id="vat-toggle-container"
+     class="vat-toggle-container vat-toggle--floating"
+     data-vat-rate="{{ vat_rate }}"
+     data-default-mode="{{ default_mode }}"
+     data-inclusive-label="{{ inclusive_label }}"
+     data-exclusive-label="{{ exclusive_label }}"
+     data-show-popup="{{ show_popup }}"
+     data-popup-title="{{ popup_title }}"
+     data-popup-message="{{ popup_message }}"
+     data-shop-currency="{{ shop.currency }}"
+     data-money-format="{{ shop.money_format }}"
+     data-shop-domain="{{ shop.permanent_domain }}"
+     data-toggle-style="{{ toggle_style }}"
+     data-primary-color="{{ primary_color }}"
+     data-background-color="{{ background_color }}"
+     data-active-text-color="{{ active_text_color }}"
+     data-border-radius="{{ border_radius }}"
+     data-animation-style="{{ animation_style }}"
+     data-position="floating">
+
+  <!-- Minimize button -->
+  <button class="vat-toggle-minimize" type="button" aria-label="Minimize VAT toggle">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- Minimized state icon -->
+  <div class="vat-toggle-minimized-icon" aria-hidden="true">
+    VAT
+  </div>
+
+  <div class="vat-toggle-wrapper">
+    <div class="vat-toggle vat-toggle--{{ toggle_style }} vat-toggle--animation-{{ animation_style }}" role="group" aria-label="VAT display toggle">
+      <button class="vat-toggle-btn vat-toggle-inclusive {% if default_mode == 'inclusive' %}active{% endif %}"
+              data-mode="inclusive"
+              type="button"
+              aria-pressed="{% if default_mode == 'inclusive' %}true{% else %}false{% endif %}">
+        {{ inclusive_label }}
+      </button>
+      <button class="vat-toggle-btn vat-toggle-exclusive {% if default_mode == 'exclusive' %}active{% endif %}"
+              data-mode="exclusive"
+              type="button"
+              aria-pressed="{% if default_mode == 'exclusive' %}true{% else %}false{% endif %}">
+        {{ exclusive_label }}
+      </button>
+    </div>
+  </div>
+</div>
+
+{% if show_popup %}
+<div id="vat-popup-overlay" class="vat-popup-overlay" style="display: none; --vat-primary-color: {{ primary_color }}; --vat-active-text-color: {{ active_text_color }};" role="dialog" aria-modal="true" aria-labelledby="vat-popup-title">
+  <div class="vat-popup">
+    <h2 id="vat-popup-title" class="vat-popup-title">{{ popup_title }}</h2>
+    <p class="vat-popup-message">{{ popup_message }}</p>
+    <div class="vat-popup-buttons">
+      <button class="vat-popup-btn vat-popup-inclusive" data-mode="inclusive" type="button">
+        {{ inclusive_label }}
+      </button>
+      <button class="vat-popup-btn vat-popup-exclusive" data-mode="exclusive" type="button">
+        {{ exclusive_label }}
+      </button>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endif %}
+
+{{ 'vat-toggle.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vat-toggle.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "PriceSwitch",
+  "target": "body",
+  "javascript": "vat-toggle.js",
+  "stylesheet": "vat-toggle.css",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable PriceSwitch",
+      "default": true,
+      "info": "Toggle visibility. All other settings are configured in the app admin."
+    },
+    {
+      "type": "header",
+      "content": "Settings Info"
+    },
+    {
+      "type": "paragraph",
+      "content": "VAT rate, labels, colors, and popup settings are all managed in the PriceSwitch app admin. Changes made there will automatically appear here."
+    }
+  ]
+}
+{% endschema %}

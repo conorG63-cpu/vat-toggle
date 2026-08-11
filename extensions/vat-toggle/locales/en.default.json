@@ -1,0 +1,36 @@
+{
+  "vat_toggle": {
+    "name": "PriceSwitch",
+    "description": "Let customers switch between VAT inclusive and exclusive pricing",
+    "settings": {
+      "show_toggle": {
+        "label": "Show VAT toggle"
+      },
+      "default_mode": {
+        "label": "Default display mode",
+        "options": {
+          "inclusive": "Include VAT",
+          "exclusive": "Exclude VAT"
+        }
+      },
+      "vat_rate": {
+        "label": "VAT Rate (%)"
+      },
+      "inclusive_label": {
+        "label": "VAT inclusive label"
+      },
+      "exclusive_label": {
+        "label": "VAT exclusive label"
+      },
+      "show_popup": {
+        "label": "Show popup on first visit"
+      },
+      "popup_title": {
+        "label": "Popup title"
+      },
+      "popup_message": {
+        "label": "Popup message"
+      }
+    }
+  }
+}

@@ -1,0 +1,172 @@
+{% comment %}
+  VAT Toggle App Block
+  Add this to your theme header or anywhere you want the toggle to appear
+  Can be set to floating mode for a fixed-position corner toggle
+  Settings are fetched from the app API and override theme settings
+{% endcomment %}
+
+{% if block.settings.show_toggle %}
+<style>
+  /* Critical inline styles */
+  #vat-toggle-container {
+    {% if block.settings.position_style == 'floating' %}
+    position: fixed !important;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9998;
+    {% else %}
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    min-width: fit-content !important;
+    width: auto !important;
+    overflow: visible !important;
+    {% endif %}
+  }
+</style>
+<div id="vat-toggle-container"
+     class="vat-toggle-container {% if block.settings.position_style == 'floating' %}vat-toggle--floating{% endif %}"
+     {% unless block.settings.position_style == 'floating' %}style="display: inline-flex; align-items: center; flex-shrink: 0; min-width: fit-content;"{% endunless %}
+     data-vat-rate="{{ block.settings.vat_rate }}"
+     data-default-mode="{{ block.settings.default_mode }}"
+     data-inclusive-label="{{ block.settings.inclusive_label }}"
+     data-exclusive-label="{{ block.settings.exclusive_label }}"
+     data-show-popup="{{ block.settings.show_popup }}"
+     data-popup-title="{{ block.settings.popup_title }}"
+     data-popup-message="{{ block.settings.popup_message }}"
+     data-shop-currency="{{ shop.currency }}"
+     data-money-format="{{ shop.money_format }}"
+     data-shop-domain="{{ shop.permanent_domain }}"
+     data-position="{{ block.settings.position_style }}">
+
+  {% if block.settings.position_style == 'floating' %}
+  <!-- Minimize button -->
+  <button class="vat-toggle-minimize" type="button" aria-label="Minimize VAT toggle">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- Minimized state icon -->
+  <div class="vat-toggle-minimized-icon" aria-hidden="true">
+    VAT
+  </div>
+  {% endif %}
+
+  <div class="vat-toggle-wrapper">
+    <div class="vat-toggle vat-toggle--pill vat-toggle--animation-smooth" role="group" aria-label="VAT display toggle">
+      <button class="vat-toggle-btn vat-toggle-inclusive {% if block.settings.default_mode == 'inclusive' %}active{% endif %}"
+              data-mode="inclusive"
+              type="button"
+              aria-pressed="{% if block.settings.default_mode == 'inclusive' %}true{% else %}false{% endif %}">
+        {{ block.settings.inclusive_label }}
+      </button>
+      <button class="vat-toggle-btn vat-toggle-exclusive {% if block.settings.default_mode == 'exclusive' %}active{% endif %}"
+              data-mode="exclusive"
+              type="button"
+              aria-pressed="{% if block.settings.default_mode == 'exclusive' %}true{% else %}false{% endif %}">
+        {{ block.settings.exclusive_label }}
+      </button>
+    </div>
+  </div>
+</div>
+
+{% if block.settings.show_popup %}
+<div id="vat-popup-overlay" class="vat-popup-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="vat-popup-title">
+  <div class="vat-popup">
+    <h2 id="vat-popup-title" class="vat-popup-title">{{ block.settings.popup_title }}</h2>
+    <p class="vat-popup-message">{{ block.settings.popup_message }}</p>
+    <div class="vat-popup-buttons">
+      <button class="vat-popup-btn vat-popup-inclusive" data-mode="inclusive" type="button">
+        {{ block.settings.inclusive_label }}
+      </button>
+      <button class="vat-popup-btn vat-popup-exclusive" data-mode="exclusive" type="button">
+        {{ block.settings.exclusive_label }}
+      </button>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endif %}
+
+{{ 'vat-toggle.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vat-toggle.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "VAT Toggle",
+  "target": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_toggle",
+      "label": "Show VAT toggle",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "position_style",
+      "label": "Toggle position",
+      "options": [
+        { "value": "inline", "label": "Inline (in header/section)" },
+        { "value": "floating", "label": "Floating (fixed corner)" }
+      ],
+      "default": "floating",
+      "info": "Floating mode shows toggle in bottom-right corner"
+    },
+    {
+      "type": "select",
+      "id": "default_mode",
+      "label": "Default display mode",
+      "options": [
+        { "value": "inclusive", "label": "Include VAT" },
+        { "value": "exclusive", "label": "Exclude VAT" }
+      ],
+      "default": "inclusive",
+      "info": "This is a fallback. Settings from the app admin take priority."
+    },
+    {
+      "type": "range",
+      "id": "vat_rate",
+      "label": "VAT Rate (%)",
+      "min": 0,
+      "max": 30,
+      "step": 0.5,
+      "default": 20,
+      "unit": "%",
+      "info": "Fallback VAT rate. Configure rates in the app admin."
+    },
+    {
+      "type": "text",
+      "id": "inclusive_label",
+      "label": "VAT inclusive label",
+      "default": "Inc. VAT"
+    },
+    {
+      "type": "text",
+      "id": "exclusive_label",
+      "label": "VAT exclusive label",
+      "default": "Ex. VAT"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_popup",
+      "label": "Show popup on first visit",
+      "default": true,
+      "info": "Can be configured in app admin"
+    },
+    {
+      "type": "text",
+      "id": "popup_title",
+      "label": "Popup title",
+      "default": "How would you like to see prices?"
+    },
+    {
+      "type": "textarea",
+      "id": "popup_message",
+      "label": "Popup message",
+      "default": "Choose your preferred pricing display"
+    }
+  ]
+}
+{% endschema %}
