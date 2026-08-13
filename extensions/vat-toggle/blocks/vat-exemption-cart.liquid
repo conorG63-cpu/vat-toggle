@@ -1,0 +1,9 @@
+{% assign exemption_settings = app.metafields.vat_toggle.exemption.value %}
+{% if block.settings.enabled and exemption_settings.enabled and exemption_settings.showCartBlock %}
+  <div class="priceswitch-cart-exemption">{% render 'vat-exemption-form', config: exemption_settings, context: 'cart' %}</div>
+{% endif %}
+{{ 'vat-exemption.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vat-exemption.js' | asset_url }}" defer></script>
+{% schema %}
+{"name":"VAT Exemption Cart","target":"section","settings":[{"type":"checkbox","id":"enabled","label":"Show VAT exemption form","default":true,"info":"Enable VAT exemption in PriceSwitch before this form appears."}]}
+{% endschema %}

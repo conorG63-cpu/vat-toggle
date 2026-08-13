@@ -18,6 +18,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     db.vatMarketRate.findMany({ where: { shopId: shop.id } }),
     db.vatTranslation.findMany({ where: { shopId: shop.id } }),
   ]) : [[], []];
+  const exemption = shop ? await db.vatExemptionSettings.findUnique({ where: { shopId: shop.id } }) : null;
 
-  return Response.json({ version: settings?.settingsVersion ?? 1, settings: settings ?? vatDefaults, rates, translations });
+  return Response.json({ version: settings?.settingsVersion ?? 1, settings: settings ?? vatDefaults, rates, translations, exemption });
 }

@@ -9,6 +9,10 @@ type = "theme"
   namespace = "$app:vat_toggle"
   key = "settings"
 
+[[metafields]]
+  namespace = "$app:vat_toggle"
+  key = "exemption"
+
 [settings]
   [[settings.fields]]
     key = "show_toggle"

@@ -41,6 +41,45 @@ model Shop {
   vatSettings VatSettings?
   vatRates    VatMarketRate[]
   translations VatTranslation[]
+  vatExemption VatExemptionSettings?
+  vatValidations VatValidation[]
+}
+
+model VatExemptionSettings {
+  id                    String   @id @default(cuid())
+  shopId                String   @unique
+  shop                  Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  enabled               Boolean  @default(false)
+  homeCountry           String   @default("")
+  allowedCountries      String   @default("AT,BE,BG,HR,CY,CZ,DE,DK,EE,ES,FI,FR,GR,HU,IE,IT,LT,LU,LV,MT,NL,PL,PT,RO,SE,SI,SK")
+  customerTag           String   @default("vat-exempt")
+  widgetMode            String   @default("both")
+  showCartBlock         Boolean  @default(true)
+  showDrawer            Boolean  @default(true)
+  showExpressWarning    Boolean  @default(true)
+  title                 String   @default("VAT exemption")
+  description           String   @default("Enter a valid EU VAT number to shop tax-free.")
+  buttonLabel           String   @default("Validate VAT number")
+  retentionDays         Int      @default(365)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model VatValidation {
+  id                String   @id @default(cuid())
+  shopId            String
+  shop              Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  email             String
+  countryCode       String
+  vatNumber         String
+  valid             Boolean
+  status            String
+  companyName       String?
+  customerId        String?
+  checkedAt         DateTime @default(now())
+
+  @@index([shopId, checkedAt])
+  @@index([shopId, email])
 }
 
 model VatSettings {

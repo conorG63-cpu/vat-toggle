@@ -59,6 +59,7 @@ export default function Overview() {
           <a className="vat-feature" href="/app/rates"><span className="vat-feature-number">02</span><div><h3>VAT rates</h3><p>Set a default rate, then override it for Shopify Markets and countries.</p></div><span className="vat-arrow">→</span></a>
           <a className="vat-feature" href="/app/languages"><span className="vat-feature-number">03</span><div><h3>Languages</h3><p>Translate the toggle and first-visit popup for each storefront locale.</p></div><span className="vat-arrow">→</span></a>
           <a className="vat-feature" href="/app/compatibility"><span className="vat-feature-number">04</span><div><h3>Compatibility check</h3><p>Test product pages, collections, cart, and mini-cart before going live.</p></div><span className="vat-arrow">→</span></a>
+          <a className="vat-feature" href="/app/exemption"><span className="vat-feature-number">05</span><div><h3>VAT exemption</h3><p>Let logged-in EU B2B customers validate their VAT number securely.</p></div><span className="vat-arrow">→</span></a>
         </div>
       </section>
     </div>

@@ -7,7 +7,7 @@ embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_products,read_markets,read_locales,read_themes,write_themes,read_orders,read_customers,unauthenticated_read_customer_tags,write_app_proxy"
+scopes = "read_products,read_markets,read_locales,read_themes,write_themes,read_orders,read_customers,write_customers,unauthenticated_read_customer_tags,write_app_proxy"
 
 [webhooks]
   api_version = "2026-01"
@@ -19,6 +19,18 @@ scopes = "read_products,read_markets,read_locales,read_themes,write_themes,read_
   [[webhooks.subscriptions]]
   uri = "/webhooks/app/scopes_update"
   topics = [ "app/scopes_update" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/customers/data_request"
+  compliance_topics = [ "customers/data_request" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/customers/redact"
+  compliance_topics = [ "customers/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/shop/redact"
+  compliance_topics = [ "shop/redact" ]
 
 [auth]
 redirect_urls = [ "https://vat-toggle.onrender.com/auth/callback" ]

@@ -23,6 +23,7 @@ export default function App() {
         <s-link href="/app/rates">VAT rates</s-link>
         <s-link href="/app/languages">Languages</s-link>
         <s-link href="/app/b2b">B2B customers</s-link>
+        <s-link href="/app/exemption">VAT exemption</s-link>
         <s-link href="/app/compatibility">Compatibility</s-link>
       </s-app-nav>
       <Outlet />

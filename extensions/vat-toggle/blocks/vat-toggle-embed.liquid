@@ -15,6 +15,7 @@
   JSON type metafields are automatically parsed by Shopify.
 {% endcomment %}
 {% assign app_settings = app.metafields.vat_toggle.settings.value %}
+{% assign exemption_settings = app.metafields.vat_toggle.exemption.value %}
 
 {% comment %} 
   All settings come from app metafields (synced from admin).
@@ -201,6 +202,9 @@
       </button>
     </div>
   </div>
+  {% if exemption_settings.enabled and exemption_settings.showDrawer and exemption_settings.widgetMode != 'toggle' %}
+    <button class="priceswitch-vat-open" type="button" data-vat-exemption-open>VAT</button>
+  {% endif %}
 </div>
 
 {% if show_popup %}
@@ -220,10 +224,18 @@
   </div>
 </div>
 {% endif %}
+
+{% if exemption_settings.enabled and exemption_settings.showDrawer %}
+<div class="priceswitch-drawer-backdrop" data-vat-exemption-drawer hidden>
+  <aside class="priceswitch-drawer" role="dialog" aria-modal="true" aria-label="VAT exemption">{% render 'vat-exemption-form', config: exemption_settings, context: 'drawer' %}</aside>
+</div>
+{% endif %}
 {% endif %}
 
 {{ 'vat-toggle.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'vat-toggle.js' | asset_url }}" defer></script>
+{{ 'vat-exemption.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vat-exemption.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
