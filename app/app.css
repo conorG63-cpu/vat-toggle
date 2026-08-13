@@ -1,1 +1,28 @@
 /** put your app's css here */
+ .vat-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .vat-grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ .vat-card { box-sizing: border-box; background: #fff; border: 1px solid #e1e3e5; border-radius: 14px; padding: 24px; color: #202223; }
+ .vat-card--wide { grid-column: span 1; }
+ .vat-card--link { text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+ .vat-card--link:hover { border-color: #008060; box-shadow: 0 4px 12px #00000012; }
+ .vat-card h2, .vat-card h3 { margin: 0 0 8px; } .vat-card p { color: #616161; line-height: 1.5; }
+ .vat-card > span, .vat-preview > span { color: #6d7175; font-size: 12px; font-weight: 700; letter-spacing: .06em; }
+ .vat-status { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #f1f2f3; font-size: 13px; font-weight: 600; }
+ .vat-status--ready { background: #aee9d1; color: #004c3f; }
+ .vat-link { color: #005bd3; font-weight: 600; }
+ .vat-quick-form, .vat-form { display: grid; gap: 14px; margin-top: 20px; }
+ .vat-quick-form { grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: end; }
+ .vat-form label, .vat-quick-form label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+ .vat-form input:not([type="checkbox"]), .vat-form select, .vat-quick-form input, .vat-quick-form select { width: 100%; box-sizing: border-box; border: 1px solid #8c9196; border-radius: 8px; min-height: 38px; padding: 8px 10px; background: #fff; }
+ .vat-primary { border: 0; border-radius: 8px; min-height: 38px; padding: 9px 14px; background: #008060; color: #fff; font-weight: 650; cursor: pointer; white-space: nowrap; }
+ .vat-primary:disabled { opacity: .55; cursor: wait; }
+ .vat-settings-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr); gap: 20px; }
+ .vat-check { display: flex !important; grid-template-columns: auto !important; align-items: center; gap: 9px !important; }
+ .vat-check input { width: 16px; height: 16px; } .vat-help, .vat-form small { color: #6d7175; font-weight: 400; line-height: 1.45; }
+ .vat-colours { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; } .vat-colours input { padding: 2px !important; }
+ .vat-preview { background: #f6f6f7; } .vat-preview-toggle { display: inline-flex; gap: 3px; padding: 3px; border-radius: 8px; margin: 20px 0 36px; }
+ .vat-preview-toggle button { border: 0; background: transparent; border-radius: 6px; padding: 9px 13px; color: #616161; font-weight: 650; }
+ .vat-preview-toggle--minimal button.active { border-bottom: 2px solid currentColor; border-radius: 0; }
+ .vat-preview-price { display: flex; align-items: baseline; gap: 9px; } .vat-preview-price strong { font-size: 32px; } .vat-preview-price span { color: #6d7175; }
+ .vat-success { color: #007f5f !important; font-weight: 600; } .vat-steps { padding-left: 20px; color: #4a4d50; line-height: 1.7; }
+ @media (max-width: 720px) { .vat-grid, .vat-grid--three, .vat-settings-layout, .vat-quick-form { grid-template-columns: 1fr; } }
