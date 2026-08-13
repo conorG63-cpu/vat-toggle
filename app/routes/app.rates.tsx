@@ -14,16 +14,20 @@ export async function action({ request }: ActionFunctionArgs) {
   if (intent === "delete") { const id = String(form.get("id")); const rate = await db.vatMarketRate.findFirst({ where: { id, shopId: shop.id } }); if (rate) await db.vatMarketRate.delete({ where: { id: rate.id } }); }
   if (intent === "save") { const marketId = String(form.get("marketId") || "manual"); const countryCode = String(form.get("countryCode") || "").toUpperCase(); const rate = Number(form.get("rate")); if (!Number.isFinite(rate) || rate < 0 || rate > 100) return { error: "Use a VAT rate between 0 and 100." }; await db.vatMarketRate.upsert({ where: { shopId_marketId_countryCode: { shopId: shop.id, marketId, countryCode } }, create: { shopId: shop.id, marketId, marketName: String(form.get("marketName") || countryCode || "Custom market"), countryCode, rate }, update: { marketName: String(form.get("marketName") || countryCode || "Custom market"), rate } }); }
   if (intent === "import") {
-    const response = await admin.graphql(`
+    try {
+      const response = await admin.graphql(`
       #graphql
       query PriceSwitchMarkets {
         markets(first: 250) { nodes { id name } }
       }
     `);
-    const json = await response.json();
-    if (json.errors?.length) return { error: "Shopify could not load Markets. Make sure the app has read_markets access, then reinstall it after deploying the updated app configuration." };
-    const markets = json.data?.markets?.nodes ?? [];
-    await Promise.all(markets.map((market: { id: string; name: string }) => db.vatMarketRate.upsert({ where: { shopId_marketId_countryCode: { shopId: shop.id, marketId: market.id, countryCode: "" } }, create: { shopId: shop.id, marketId: market.id, marketName: market.name, countryCode: "", rate: settings.defaultVatRate }, update: { marketName: market.name } })));
+      const json: any = await response.json();
+      if (json.errors?.length) return { error: "Shopify could not load Markets. Make sure the app has read_markets access, then reinstall it after deploying the updated app configuration." };
+      const markets = json.data?.markets?.nodes ?? [];
+      await Promise.all(markets.map((market: { id: string; name: string }) => db.vatMarketRate.upsert({ where: { shopId_marketId_countryCode: { shopId: shop.id, marketId: market.id, countryCode: "" } }, create: { shopId: shop.id, marketId: market.id, marketName: market.name, countryCode: "", rate: settings.defaultVatRate }, update: { marketName: market.name } })));
+    } catch {
+      return { error: "Shopify could not load Markets. Make sure the app has read_markets access, then reinstall it after deploying the updated app configuration." };
+    }
   }
   return { saved: true };
 }
