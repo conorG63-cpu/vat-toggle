@@ -1,5 +1,3 @@
-yarn run v1.22.22
-$ prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script
 -- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
 
@@ -75,4 +73,3 @@ CREATE UNIQUE INDEX "VatSettings_shopId_key" ON "VatSettings"("shopId");
 -- AddForeignKey
 ALTER TABLE "VatSettings" ADD CONSTRAINT "VatSettings_shopId_fkey" FOREIGN KEY ("shopId") REFERENCES "Shop"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-Done in 1.20s.
