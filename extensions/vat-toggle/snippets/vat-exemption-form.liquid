@@ -1,10 +1,11 @@
 {% assign exemption = config %}
+{% assign eu_countries = 'AT,BE,BG,HR,CY,CZ,DE,DK,EE,ES,FI,FR,GR,HU,IE,IT,LT,LU,LV,MT,NL,PL,PT,RO,SE,SI,SK' | split: ',' %}
 <div class="priceswitch-exemption" data-vat-exemption-form data-show-warning="{{ exemption.showExpressWarning }}">
   <div class="priceswitch-exemption__heading"><h2>{{ exemption.title | default: 'VAT exemption' }}</h2>{% if context == 'drawer' %}<button type="button" class="priceswitch-exemption__close" data-vat-exemption-close aria-label="Close">×</button>{% endif %}</div>
   <p>{{ exemption.description | default: 'Enter a valid EU VAT number to shop tax-free.' }}</p>
   {% unless customer %}<div class="priceswitch-exemption__login"><strong>Log in to validate your VAT number</strong><span>Your exemption is attached securely to your customer account.</span><a href="{{ routes.account_login_url }}">Log in</a></div>{% else %}
     <div class="priceswitch-exemption__account">Validating for <strong>{{ customer.email }}</strong></div>
-    <label>Country<select name="countryCode" required data-vat-country><option value="">Select country</option>{% for country in 'AT,BE,BG,HR,CY,CZ,DE,DK,EE,ES,FI,FR,GR,HU,IE,IT,LT,LU,LV,MT,NL,PL,PT,RO,SE,SI,SK' | split: ',' %}<option value="{{ country }}">{{ country }}</option>{% endfor %}</select></label>
+    <label>Country<select name="countryCode" required data-vat-country><option value="">Select country</option>{% for country in eu_countries %}<option value="{{ country }}">{{ country }}</option>{% endfor %}</select></label>
     <label>VAT number<input name="vatNumber" required autocomplete="off" data-vat-number placeholder="Select a country first"/></label>
     <small class="priceswitch-exemption__hint" data-vat-hint></small>
     <button type="button" data-vat-submit>{{ exemption.buttonLabel | default: 'Validate VAT number' }}</button>
