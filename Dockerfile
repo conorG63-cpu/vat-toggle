@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 RUN apk add --no-cache openssl
 
 EXPOSE 3000
@@ -7,12 +7,12 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package.json package-lock.json* ./
+COPY package.json yarn.lock ./
 
-RUN npm ci --omit=dev && npm cache clean --force
+RUN corepack enable && yarn install --frozen-lockfile && yarn cache clean
 
 COPY . .
 
-RUN npm run build
+RUN yarn build
 
-CMD ["npm", "run", "docker-start"]
+CMD ["yarn", "docker-start"]
