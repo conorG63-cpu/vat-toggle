@@ -27,35 +27,40 @@ export default function Overview() {
   const saving = navigation.state !== "idle";
 
   return <s-page heading="VAT pricing">
-    {result?.saved && <s-banner tone="success">{result.message}</s-banner>}
-    <s-section heading={settings.setupCompleted ? "Your VAT pricing workspace" : "Quick setup"}>
-      <div className="vat-grid">
-        <div className="vat-card vat-card--wide">
-          <h2>{settings.setupCompleted ? "Keep your pricing clear for every customer" : "Start with the essentials"}</h2>
-          <p>{settings.setupCompleted ? "Update your storefront display, B2B behaviour, and theme activation from one calm workspace." : "Choose a default price view, VAT rate, and how customers switch. You can refine the styling afterwards."}</p>
-          <Form method="post" className="vat-quick-form">
-            <input type="hidden" name="actionType" value="complete" />
-            <label>Default customer view<select name="defaultDisplayMode" defaultValue={settings.defaultDisplayMode}><option value="inclusive">Prices including VAT</option><option value="exclusive">Prices excluding VAT</option></select></label>
-            <label>VAT rate (%)<input name="defaultVatRate" type="number" min="0" max="100" step="0.01" defaultValue={settings.defaultVatRate} /></label>
-            <label>Customer choice<select name="togglePosition" defaultValue={settings.togglePosition}><option value="header">Header toggle</option><option value="popup">First-visit popup</option><option value="both">Header toggle and popup</option></select></label>
-            <button className="vat-primary" type="submit" disabled={saving}>{settings.setupCompleted ? "Save quick settings" : "Save and continue"}</button>
-          </Form>
+    <div className="vat-page">
+      {result?.saved && <s-banner tone="success">{result.message}</s-banner>}
+      <section className="vat-hero">
+        <div>
+          <span className="vat-eyebrow">PRICE DISPLAY CONTROL</span>
+          <h1>{settings.setupCompleted ? "VAT pricing is ready to manage" : "Set up clear VAT pricing"}</h1>
+          <p>{settings.setupCompleted ? "Keep retail and trade pricing consistent across your storefront." : "Start with the three choices customers notice most. You can fine-tune the rest later."}</p>
         </div>
-        <div className="vat-card">
+        <div className="vat-activation">
           <span className={`vat-status ${settings.setupCompleted ? "vat-status--ready" : ""}`}>{settings.setupCompleted ? "Setup complete" : "Setup needed"}</span>
-          <h3>Theme activation</h3>
-          <p>Enable the PriceSwitch app embed in your live theme, then check a product and cart.</p>
-          <a className="vat-link" href={`https://${shopDomain}/admin/themes/current/editor?context=apps`} target="_blank" rel="noreferrer">Open theme editor →</a>
+          <strong>Theme app embed</strong>
+          <p>Enable PriceSwitch in your live theme before going live.</p>
+          <a className="vat-link" href={`https://${shopDomain}/admin/themes/current/editor?context=apps`} target="_blank" rel="noreferrer">Open theme editor</a>
         </div>
-      </div>
-    </s-section>
-    <s-section heading="Manage your pricing">
-      <div className="vat-grid vat-grid--three">
-        <a className="vat-card vat-card--link" href="/app/display"><span>01</span><h3>Price display</h3><p>Labels, styles, popup copy, and live preview.</p></a>
-        <a className="vat-card vat-card--link" href="/app/b2b"><span>02</span><h3>B2B customers</h3><p>Automatically show trade customers the right view.</p></a>
-        <div className="vat-card"><span>03</span><h3>Compatibility</h3><p>Check product, collection, cart, and mini-cart before going live.</p><small>Coming next</small></div>
-      </div>
-    </s-section>
+      </section>
+      <section className="vat-panel">
+        <div className="vat-panel-heading"><div><h2>Quick settings</h2><p>Set the default view and where customers can switch prices.</p></div><span>Changes sync to your theme when saved</span></div>
+        <Form method="post" className="vat-quick-form">
+          <input type="hidden" name="actionType" value="complete" />
+          <label>Default customer view<select name="defaultDisplayMode" defaultValue={settings.defaultDisplayMode}><option value="inclusive">Prices including VAT</option><option value="exclusive">Prices excluding VAT</option></select></label>
+          <label>VAT rate (%)<input name="defaultVatRate" type="number" min="0" max="100" step="0.01" defaultValue={settings.defaultVatRate} /></label>
+          <input type="hidden" name="showPopupOnFirstVisitPresent" value="true" /><label className="vat-quick-check"><input name="showPopupOnFirstVisit" type="checkbox" defaultChecked={settings.showPopupOnFirstVisit} /> Ask visitors on their first visit</label>
+          <button className="vat-primary" type="submit" disabled={saving}>{settings.setupCompleted ? "Save changes" : "Save and continue"}</button>
+        </Form>
+      </section>
+      <section className="vat-panel vat-panel--flush">
+        <div className="vat-panel-heading"><div><h2>Manage VAT pricing</h2><p>Configure each area without losing your place.</p></div></div>
+        <div className="vat-feature-list">
+          <a className="vat-feature" href="/app/display"><span className="vat-feature-number">01</span><div><h3>Price display</h3><p>Labels, styles, popup copy, colours, and a live storefront preview.</p></div><span className="vat-arrow">→</span></a>
+          <a className="vat-feature" href="/app/b2b"><span className="vat-feature-number">02</span><div><h3>B2B customers</h3><p>Choose which Shopify customer tags should default to trade pricing.</p></div><span className="vat-arrow">→</span></a>
+          <div className="vat-feature vat-feature--muted"><span className="vat-feature-number">03</span><div><h3>Compatibility check</h3><p>Test product pages, collections, cart, and mini-cart before going live.</p></div><small>Coming next</small></div>
+        </div>
+      </section>
+    </div>
   </s-page>;
 }
 
