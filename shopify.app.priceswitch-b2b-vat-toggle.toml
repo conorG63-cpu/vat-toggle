@@ -2,7 +2,7 @@
 
 client_id = "c98d5bfa95b10a7ac42f4e4d3c2f3d5d"
 name = "PriceSwitch B2B VAT Toggle"
-application_url = "https://vat-full-features.gadget.app/api/shopify/install-or-render"
+application_url = "https://vat-toggle.onrender.com"
 embedded = true
 
 [webhooks]
@@ -14,12 +14,11 @@ api_version = "2026-01"
 
 [auth]
 redirect_urls = [
-  "https://vat-full-features.gadget.app/api/connections/auth/shopify/callback",
-  "https://vat-full-features--development.gadget.app/api/connections/auth/shopify/callback"
+  "https://vat-toggle.onrender.com/auth/callback"
 ]
 
 [app_proxy]
-url = "https://vat-full-features--development.gadget.app/api/proxy"
+url = "/apps/proxy"
 subpath = "vat-toggle"
 prefix = "apps"
 
