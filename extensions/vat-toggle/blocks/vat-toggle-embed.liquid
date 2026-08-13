@@ -120,6 +120,10 @@
     --vat-primary-color: {{ primary_color }};
     --vat-background-color: {{ background_color }};
     --vat-active-text-color: {{ active_text_color }};
+    --vat-widget-padding: {{ app_settings.widgetPadding | default: 12 }}px;
+    --vat-widget-border-width: {{ app_settings.widgetBorderWidth | default: 0 }}px;
+    --vat-widget-border-color: {{ app_settings.widgetBorderColor | default: '#e1e3e5' }};
+    --vat-helper-text-color: {{ app_settings.helperTextColor | default: '#6d7175' }};
   }
 </style>
 
@@ -135,12 +139,38 @@
      data-shop-currency="{{ shop.currency }}"
      data-money-format="{{ shop.money_format }}"
      data-shop-domain="{{ shop.permanent_domain }}"
+     data-country-code="{{ localization.country.iso_code }}"
+     data-locale="{{ request.locale.iso_code }}"
      data-toggle-style="{{ toggle_style }}"
      data-primary-color="{{ primary_color }}"
      data-background-color="{{ background_color }}"
      data-active-text-color="{{ active_text_color }}"
      data-border-radius="{{ border_radius }}"
      data-animation-style="{{ animation_style }}"
+     data-settings-version="{{ app_settings.settingsVersion | default: 1 }}"
+     data-widget-position="{{ app_settings.widgetPosition | default: 'bottom-right' }}"
+     data-desktop-offset-x="{{ app_settings.desktopOffsetX | default: 24 }}"
+     data-desktop-offset-y="{{ app_settings.desktopOffsetY | default: 24 }}"
+     data-mobile-offset-x="{{ app_settings.mobileOffsetX | default: 16 }}"
+     data-mobile-offset-y="{{ app_settings.mobileOffsetY | default: 80 }}"
+     data-widget-padding="{{ app_settings.widgetPadding | default: 12 }}"
+     data-control-size="{{ app_settings.controlSize | default: 'medium' }}"
+     data-widget-border-width="{{ app_settings.widgetBorderWidth | default: 0 }}"
+     data-widget-border-color="{{ app_settings.widgetBorderColor | default: '#e1e3e5' }}"
+     data-widget-shadow="{{ app_settings.widgetShadow | default: 'medium' }}"
+     data-allow-minimize="{{ app_settings.allowMinimize | default: true }}"
+     data-helper-text-size="{{ app_settings.helperTextSize | default: 'medium' }}"
+     data-helper-text-color="{{ app_settings.helperTextColor | default: '#6d7175' }}"
+     data-popup-choice-days="{{ app_settings.popupChoiceDays | default: 30 }}"
+     data-popup-width="{{ app_settings.popupWidth | default: 420 }}"
+     data-popup-background-color="{{ app_settings.popupBackgroundColor | default: '#ffffff' }}"
+     data-popup-overlay-color="{{ app_settings.popupOverlayColor | default: '#000000' }}"
+     data-popup-overlay-opacity="{{ app_settings.popupOverlayOpacity | default: 55 }}"
+     data-popup-border-radius="{{ app_settings.popupBorderRadius | default: 'medium' }}"
+     data-popup-title-color="{{ app_settings.popupTitleColor | default: '#202223' }}"
+     data-popup-text-color="{{ app_settings.popupTextColor | default: '#616161' }}"
+     data-popup-button-style="{{ app_settings.popupButtonStyle | default: 'solid' }}"
+     data-popup-show-close="{{ app_settings.popupShowClose | default: true }}"
      data-position="floating">
 
   <!-- Minimize button -->
@@ -176,6 +206,7 @@
 {% if show_popup %}
 <div id="vat-popup-overlay" class="vat-popup-overlay" style="display: none; --vat-primary-color: {{ primary_color }}; --vat-active-text-color: {{ active_text_color }};" role="dialog" aria-modal="true" aria-labelledby="vat-popup-title">
   <div class="vat-popup">
+    {% if app_settings.popupShowClose != false %}<button class="vat-popup-close" type="button" aria-label="Close">×</button>{% endif %}
     <h2 id="vat-popup-title" class="vat-popup-title">{{ popup_title }}</h2>
     <p class="vat-popup-message">{{ popup_message }}</p>
     <div class="vat-popup-buttons">

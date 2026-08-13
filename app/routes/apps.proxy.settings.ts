@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
+import { vatDefaults } from "../vat-settings.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await authenticate.public.appProxy(request);
@@ -12,29 +13,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const shop = await db.shop.findUnique({ where: { shopDomain } });
-  const settings = shop
-    ? await db.vatSettings.findUnique({ where: { shopId: shop.id } })
-    : null;
+  const settings = shop ? await db.vatSettings.findUnique({ where: { shopId: shop.id } }) : null;
+  const [rates, translations] = shop ? await Promise.all([
+    db.vatMarketRate.findMany({ where: { shopId: shop.id } }),
+    db.vatTranslation.findMany({ where: { shopId: shop.id } }),
+  ]) : [[], []];
 
-  return Response.json(settings ?? {
-    defaultDisplayMode: "inclusive",
-    defaultVatRate: 20,
-    showPopupOnFirstVisit: true,
-    togglePosition: "header",
-    inclusiveLabel: "Inc. VAT",
-    exclusiveLabel: "Ex. VAT",
-    popupTitle: "How would you like to see prices?",
-    popupMessage: "Choose your preferred pricing display",
-    enableB2BMode: false,
-    b2bCustomerTags: "b2b,wholesale,trade",
-    b2bDefaultMode: "exclusive",
-    toggleStyle: "pill",
-    primaryColor: "#000000",
-    backgroundColor: "#f4f4f4",
-    activeTextColor: "#ffffff",
-    borderRadius: "medium",
-    showVatIndicator: true,
-    indicatorPosition: "after",
-    animationStyle: "smooth",
-  });
+  return Response.json({ version: settings?.settingsVersion ?? 1, settings: settings ?? vatDefaults, rates, translations });
 }

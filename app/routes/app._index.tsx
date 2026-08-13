@@ -56,8 +56,9 @@ export default function Overview() {
         <div className="vat-panel-heading"><div><h2>Manage VAT pricing</h2><p>Configure each area without losing your place.</p></div></div>
         <div className="vat-feature-list">
           <a className="vat-feature" href="/app/display"><span className="vat-feature-number">01</span><div><h3>Price display</h3><p>Labels, styles, popup copy, colours, and a live storefront preview.</p></div><span className="vat-arrow">→</span></a>
-          <a className="vat-feature" href="/app/b2b"><span className="vat-feature-number">02</span><div><h3>B2B customers</h3><p>Choose which Shopify customer tags should default to trade pricing.</p></div><span className="vat-arrow">→</span></a>
-          <div className="vat-feature vat-feature--muted"><span className="vat-feature-number">03</span><div><h3>Compatibility check</h3><p>Test product pages, collections, cart, and mini-cart before going live.</p></div><small>Coming next</small></div>
+          <a className="vat-feature" href="/app/rates"><span className="vat-feature-number">02</span><div><h3>VAT rates</h3><p>Set a default rate, then override it for Shopify Markets and countries.</p></div><span className="vat-arrow">→</span></a>
+          <a className="vat-feature" href="/app/languages"><span className="vat-feature-number">03</span><div><h3>Languages</h3><p>Translate the toggle and first-visit popup for each storefront locale.</p></div><span className="vat-arrow">→</span></a>
+          <a className="vat-feature" href="/app/compatibility"><span className="vat-feature-number">04</span><div><h3>Compatibility check</h3><p>Test product pages, collections, cart, and mini-cart before going live.</p></div><span className="vat-arrow">→</span></a>
         </div>
       </section>
     </div>

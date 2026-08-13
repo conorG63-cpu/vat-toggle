@@ -39,6 +39,8 @@ model Shop {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   vatSettings VatSettings?
+  vatRates    VatMarketRate[]
+  translations VatTranslation[]
 }
 
 model VatSettings {
@@ -65,9 +67,62 @@ model VatSettings {
   showVatIndicator      Boolean   @default(true)
   indicatorPosition     String    @default("after")
   animationStyle        String    @default("smooth")
+  settingsVersion       Int       @default(1)
+  widgetPosition        String    @default("bottom-right")
+  desktopOffsetX        Int       @default(24)
+  desktopOffsetY        Int       @default(24)
+  mobileOffsetX         Int       @default(16)
+  mobileOffsetY         Int       @default(80)
+  widgetPadding         Int       @default(12)
+  controlSize           String    @default("medium")
+  widgetBorderWidth     Int       @default(0)
+  widgetBorderColor     String    @default("#e1e3e5")
+  widgetShadow          String    @default("medium")
+  allowMinimize         Boolean   @default(true)
+  helperTextSize        String    @default("medium")
+  helperTextColor       String    @default("#6d7175")
+  popupChoiceDays       Int       @default(30)
+  popupWidth            Int       @default(420)
+  popupBackgroundColor  String    @default("#ffffff")
+  popupOverlayColor     String    @default("#000000")
+  popupOverlayOpacity   Int       @default(55)
+  popupBorderRadius     String    @default("medium")
+  popupTitleColor       String    @default("#202223")
+  popupTextColor        String    @default("#616161")
+  popupButtonStyle      String    @default("solid")
+  popupShowClose        Boolean   @default(true)
   setupCompleted        Boolean   @default(false)
   activated             Boolean   @default(false)
   activatedAt           DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+}
+
+model VatMarketRate {
+  id        String   @id @default(cuid())
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  marketId  String
+  marketName String
+  countryCode String
+  rate      Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([shopId, marketId, countryCode])
+}
+
+model VatTranslation {
+  id             String   @id @default(cuid())
+  shopId         String
+  shop           Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  locale         String
+  inclusiveLabel String
+  exclusiveLabel String
+  popupTitle     String
+  popupMessage   String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([shopId, locale])
 }

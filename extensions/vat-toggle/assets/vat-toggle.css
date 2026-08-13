@@ -237,7 +237,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
+  opacity: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -246,10 +247,11 @@
 }
 
 .vat-popup {
-  background: #fff;
-  border-radius: 12px;
+  position: relative;
+  background: var(--vat-popup-background, #fff);
+  border-radius: var(--vat-popup-radius, 12px);
   padding: 32px;
-  max-width: 400px;
+  max-width: var(--vat-popup-width, 400px);
   width: 100%;
   text-align: center;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
@@ -271,13 +273,13 @@
   margin: 0 0 12px;
   font-size: 20px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--vat-popup-title-color, #1a1a1a);
 }
 
 .vat-popup-message {
   margin: 0 0 24px;
   font-size: 15px;
-  color: #666;
+  color: var(--vat-popup-text-color, #666);
   line-height: 1.5;
 }
 
@@ -310,6 +312,10 @@
   outline: 2px solid #005bd3;
   outline-offset: 2px;
 }
+.vat-popup-overlay::before { content: ''; position: absolute; inset: 0; background: var(--vat-popup-overlay, #000); opacity: var(--vat-popup-opacity, .5); }
+.vat-popup { z-index: 1; }
+.vat-popup--outline-buttons .vat-popup-btn:hover { background: transparent; color: var(--vat-primary-color, #000); }
+.vat-popup-close { position: absolute; top: 8px; right: 12px; border: 0; background: transparent; font-size: 24px; color: var(--vat-popup-text-color, #666); cursor: pointer; }
 
 /* ============================================
    HEADER-SPECIFIC STYLES
@@ -510,8 +516,9 @@ header .vat-toggle-btn,
   z-index: 9998;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-  padding: 12px;
+  box-shadow: var(--vat-widget-shadow, 0 4px 24px rgba(0, 0, 0, 0.12));
+  padding: var(--vat-widget-padding, 12px);
+  border: var(--vat-widget-border-width, 0) solid var(--vat-widget-border-color, transparent);
   animation: vatFloatIn 0.3s ease-out;
   transition: all 0.3s ease;
   /* Reset inline styles that might conflict */
@@ -525,6 +532,13 @@ header .vat-toggle-btn,
   bottom: 24px;
   right: 24px;
 }
+.vat-toggle--floating.vat-toggle--no-minimize .vat-toggle-minimize { display: none; }
+.vat-toggle--floating[data-position="bottom-left"] { right: auto !important; }
+.vat-toggle--floating[data-position="top-right"] { bottom: auto !important; }
+.vat-toggle--floating[data-position="top-left"] { right: auto !important; bottom: auto !important; }
+.vat-toggle--floating[data-control-size="small"] .vat-toggle-btn { padding: 5px 10px !important; font-size: 11px !important; }
+.vat-toggle--floating[data-control-size="large"] .vat-toggle-btn { padding: 11px 19px !important; font-size: 15px !important; }
+.vat-indicator { color: var(--vat-helper-text-color, #6d7175); }
 
 /* Floating toggle wrapper */
 .vat-toggle--floating .vat-toggle-wrapper {
@@ -635,9 +649,12 @@ header .vat-toggle-btn,
 /* Mobile positioning - above typical mobile nav bars */
 @media (max-width: 768px) {
   .vat-toggle--floating {
-    bottom: 80px;
-    right: 16px;
+    bottom: var(--vat-mobile-y, 80px);
+    right: var(--vat-mobile-x, 16px);
   }
+  .vat-toggle--floating[data-position="bottom-left"] { left: var(--vat-mobile-x, 16px) !important; }
+  .vat-toggle--floating[data-position="top-right"] { top: var(--vat-mobile-y, 80px) !important; }
+  .vat-toggle--floating[data-position="top-left"] { left: var(--vat-mobile-x, 16px) !important; top: var(--vat-mobile-y, 80px) !important; }
 
   .vat-toggle--floating .vat-toggle-btn {
     padding: 6px 12px !important;

@@ -21,6 +21,30 @@ export const vatDefaults = {
   showVatIndicator: true,
   indicatorPosition: "after",
   animationStyle: "smooth",
+  settingsVersion: 1,
+  widgetPosition: "bottom-right",
+  desktopOffsetX: 24,
+  desktopOffsetY: 24,
+  mobileOffsetX: 16,
+  mobileOffsetY: 80,
+  widgetPadding: 12,
+  controlSize: "medium",
+  widgetBorderWidth: 0,
+  widgetBorderColor: "#e1e3e5",
+  widgetShadow: "medium",
+  allowMinimize: true,
+  helperTextSize: "medium",
+  helperTextColor: "#6d7175",
+  popupChoiceDays: 30,
+  popupWidth: 420,
+  popupBackgroundColor: "#ffffff",
+  popupOverlayColor: "#000000",
+  popupOverlayOpacity: 55,
+  popupBorderRadius: "medium",
+  popupTitleColor: "#202223",
+  popupTextColor: "#616161",
+  popupButtonStyle: "solid",
+  popupShowClose: true,
 };
 
 export async function getVatSettings(shopDomain: string) {
@@ -39,6 +63,9 @@ export function settingsFromForm(form: FormData): Prisma.VatSettingsUpdateInput 
     "defaultDisplayMode", "togglePosition", "inclusiveLabel", "exclusiveLabel", "popupTitle",
     "popupMessage", "b2bCustomerTags", "b2bDefaultMode", "toggleStyle", "primaryColor",
     "backgroundColor", "activeTextColor", "borderRadius", "indicatorPosition", "animationStyle",
+    "widgetPosition", "controlSize", "widgetBorderColor", "widgetShadow", "helperTextSize",
+    "helperTextColor", "popupBackgroundColor", "popupOverlayColor", "popupBorderRadius",
+    "popupTitleColor", "popupTextColor", "popupButtonStyle",
   ] as const;
 
   for (const field of stringFields) {
@@ -50,7 +77,13 @@ export function settingsFromForm(form: FormData): Prisma.VatSettingsUpdateInput 
     if (Number.isFinite(rate) && rate >= 0 && rate <= 100) values.defaultVatRate = rate;
   }
 
-  for (const field of ["showPopupOnFirstVisit", "enableB2BMode", "showVatIndicator"] as const) {
+  for (const field of ["desktopOffsetX", "desktopOffsetY", "mobileOffsetX", "mobileOffsetY", "widgetPadding", "widgetBorderWidth", "popupChoiceDays", "popupWidth", "popupOverlayOpacity"] as const) {
+    if (!form.has(field)) continue;
+    const value = Number(form.get(field));
+    if (Number.isInteger(value) && value >= 0 && value <= (field === "popupWidth" ? 900 : 200)) values[field] = value;
+  }
+
+  for (const field of ["showPopupOnFirstVisit", "enableB2BMode", "showVatIndicator", "allowMinimize", "popupShowClose"] as const) {
     if (form.has(`${field}Present`)) values[field] = form.get(field) === "on";
   }
 
@@ -59,7 +92,7 @@ export function settingsFromForm(form: FormData): Prisma.VatSettingsUpdateInput 
 
 export async function saveVatSettings(shopDomain: string, values: Prisma.VatSettingsUpdateInput) {
   const { shop } = await getVatSettings(shopDomain);
-  return db.vatSettings.update({ where: { shopId: shop.id }, data: values });
+  return db.vatSettings.update({ where: { shopId: shop.id }, data: { ...values, settingsVersion: { increment: 1 } } });
 }
 
 export async function syncSettingsToAppMetafield(admin: any, settings: any) {
@@ -88,6 +121,30 @@ export async function syncSettingsToAppMetafield(admin: any, settings: any) {
     showVatIndicator: settings.showVatIndicator,
     indicatorPosition: settings.indicatorPosition,
     animationStyle: settings.animationStyle,
+    settingsVersion: settings.settingsVersion,
+    widgetPosition: settings.widgetPosition,
+    desktopOffsetX: settings.desktopOffsetX,
+    desktopOffsetY: settings.desktopOffsetY,
+    mobileOffsetX: settings.mobileOffsetX,
+    mobileOffsetY: settings.mobileOffsetY,
+    widgetPadding: settings.widgetPadding,
+    controlSize: settings.controlSize,
+    widgetBorderWidth: settings.widgetBorderWidth,
+    widgetBorderColor: settings.widgetBorderColor,
+    widgetShadow: settings.widgetShadow,
+    allowMinimize: settings.allowMinimize,
+    helperTextSize: settings.helperTextSize,
+    helperTextColor: settings.helperTextColor,
+    popupChoiceDays: settings.popupChoiceDays,
+    popupWidth: settings.popupWidth,
+    popupBackgroundColor: settings.popupBackgroundColor,
+    popupOverlayColor: settings.popupOverlayColor,
+    popupOverlayOpacity: settings.popupOverlayOpacity,
+    popupBorderRadius: settings.popupBorderRadius,
+    popupTitleColor: settings.popupTitleColor,
+    popupTextColor: settings.popupTextColor,
+    popupButtonStyle: settings.popupButtonStyle,
+    popupShowClose: settings.popupShowClose,
   });
 
   const response = await admin.graphql(
