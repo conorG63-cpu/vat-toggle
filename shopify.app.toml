@@ -2,7 +2,7 @@
 
 client_id = "c98d5bfa95b10a7ac42f4e4d3c2f3d5d"
 name = "PriceSwitch B2B VAT Toggle"
-application_url = "https://example.com"
+application_url = "https://vat-toggle.onrender.com"
 embedded = true
 
 [access_scopes]
@@ -21,7 +21,7 @@ scopes = "read_products,read_markets,read_locales,read_themes,write_themes,read_
   topics = [ "app/scopes_update" ]
 
 [auth]
-redirect_urls = [ "https://example.com/auth/callback" ]
+redirect_urls = [ "https://vat-toggle.onrender.com/auth/callback" ]
 
 [app_proxy]
 url = "/apps/proxy"
