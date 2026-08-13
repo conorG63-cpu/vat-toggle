@@ -42,29 +42,32 @@ model Shop {
 }
 
 model VatSettings {
-  id                    String   @id @default(cuid())
-  shopId                String   @unique
-  shop                  Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  defaultDisplayMode    String   @default("inclusive")
-  defaultVatRate        Float    @default(20)
-  showPopupOnFirstVisit Boolean  @default(true)
-  togglePosition        String   @default("header")
-  inclusiveLabel        String   @default("Inc. VAT")
-  exclusiveLabel        String   @default("Ex. VAT")
-  popupTitle            String   @default("How would you like to see prices?")
-  popupMessage          String   @default("Choose your preferred pricing display")
-  enableB2BMode         Boolean  @default(false)
-  b2bCustomerTags       String   @default("b2b,wholesale,trade")
-  b2bDefaultMode        String   @default("exclusive")
+  id                    String    @id @default(cuid())
+  shopId                String    @unique
+  shop                  Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  defaultDisplayMode    String    @default("inclusive")
+  defaultVatRate        Float     @default(20)
+  showPopupOnFirstVisit Boolean   @default(true)
+  togglePosition        String    @default("header")
+  inclusiveLabel        String    @default("Inc. VAT")
+  exclusiveLabel        String    @default("Ex. VAT")
+  popupTitle            String    @default("How would you like to see prices?")
+  popupMessage          String    @default("Choose your preferred pricing display")
+  enableB2BMode         Boolean   @default(false)
+  b2bCustomerTags       String    @default("b2b,wholesale,trade")
+  b2bDefaultMode        String    @default("exclusive")
   vatRates              Json?
-  toggleStyle           String   @default("pill")
-  primaryColor          String   @default("#000000")
-  backgroundColor       String   @default("#f4f4f4")
-  activeTextColor       String   @default("#ffffff")
-  borderRadius          String   @default("medium")
-  showVatIndicator      Boolean  @default(true)
-  indicatorPosition     String   @default("after")
-  animationStyle        String   @default("smooth")
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  toggleStyle           String    @default("pill")
+  primaryColor          String    @default("#000000")
+  backgroundColor       String    @default("#f4f4f4")
+  activeTextColor       String    @default("#ffffff")
+  borderRadius          String    @default("medium")
+  showVatIndicator      Boolean   @default(true)
+  indicatorPosition     String    @default("after")
+  animationStyle        String    @default("smooth")
+  setupCompleted        Boolean   @default(false)
+  activated             Boolean   @default(false)
+  activatedAt           DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 }
