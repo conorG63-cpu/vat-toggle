@@ -1,0 +1,11 @@
+[Unit]
+Description=Check for PriceSwitch deployments every minute
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+Persistent=true
+Unit=priceswitch-deploy.service
+
+[Install]
+WantedBy=timers.target

@@ -198,6 +198,36 @@ Terraform deliberately does **not** manage application secrets. Do not put Shopi
 
 The instance bootstrap intentionally only installs Docker and prepares `/opt/priceswitch`; it does not contain secrets or clone the application.
 
+### Automatic deployments from `main`
+
+For this single-server setup, PriceSwitch uses a server-side systemd timer rather than a GitHub-hosted runner connecting over SSH. The server checks `origin/main` every minute and only rebuilds when a new commit exists. The server's `.env` file is ignored by Git and is preserved during updates.
+
+After the infrastructure files are pushed to GitHub, initialise this once from your Mac:
+
+```shell
+ssh -i ~/Downloads/LightsailDefaultKey-eu-west-1.pem ubuntu@app.corezilla.dev <<'EOF'
+set -eu
+cd /opt/priceswitch
+git init
+git remote remove origin 2>/dev/null || true
+git remote add origin https://github.com/conorG63-cpu/vat-toggle.git
+git fetch origin main
+git checkout -B main origin/main
+sudo install -m 0755 infra/terraform/production/priceswitch-deploy.sh /usr/local/bin/priceswitch-deploy
+sudo install -m 0644 infra/terraform/production/priceswitch-deploy.service /etc/systemd/system/priceswitch-deploy.service
+sudo install -m 0644 infra/terraform/production/priceswitch-deploy.timer /etc/systemd/system/priceswitch-deploy.timer
+sudo systemctl daemon-reload
+sudo systemctl enable --now priceswitch-deploy.timer
+EOF
+```
+
+Verify it with:
+
+```shell
+ssh -i ~/Downloads/LightsailDefaultKey-eu-west-1.pem ubuntu@app.corezilla.dev \
+  "systemctl list-timers priceswitch-deploy.timer && sudo systemctl start priceswitch-deploy.service && journalctl -u priceswitch-deploy.service --no-pager -n 30"
+```
+
 When you reach the step for [setting up environment variables](https://shopify.dev/docs/apps/deployment/web#set-env-vars), you also need to set the variable `NODE_ENV=production`.
 
 ## Gotchas / Troubleshooting
