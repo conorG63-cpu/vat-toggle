@@ -125,6 +125,79 @@ When you're ready to set up your app in production, you can follow [our deployme
 - [Render](https://render.com/docs/deploy-shopify-app): This tutorial guides you through using Docker to deploy and install apps on a Dev store.
 - [Manual deployment guide](https://shopify.dev/docs/apps/launch/deployment/deploy-to-hosting-service): This resource provides general guidance on the requirements of deployment including environment variables, secrets, and persistent data.
 
+## AWS production deployment (Terraform + Lightsail)
+
+This repository keeps the AWS infrastructure in `infra/terraform`. Terraform manages the Lightsail server, its permanent IP address, and firewall rules. Docker Compose runs the app, PostgreSQL, and Caddy (HTTPS) on that server.
+
+Terraform deliberately does **not** manage application secrets. Do not put Shopify credentials, database passwords, or a completed `.env` file in Terraform variables, state, or Git.
+
+### One-time infrastructure setup
+
+1. Install and authenticate the AWS CLI and Terraform locally.
+2. Create a globally unique S3 state-bucket name, then initialise the state bucket:
+
+   ```shell
+   cd infra/terraform/bootstrap
+   terraform init
+   terraform apply -var="state_bucket_name=priceswitch-tf-state-REPLACE-ME"
+   ```
+
+3. Configure production variables and the remote state backend:
+
+   ```shell
+   cd ../production
+   cp terraform.tfvars.example terraform.tfvars
+   cp backend.hcl.example backend.hcl
+   ```
+
+   Replace `ssh_cidr` in `terraform.tfvars` with your current public IP and replace the bucket in `backend.hcl` with the name from step 2. Confirm available Lightsail bundles and zones before applying:
+
+   ```shell
+   aws lightsail get-regions --include-availability-zones true
+   aws lightsail get-bundles --include-inactive false
+   terraform init -backend-config=backend.hcl
+   terraform plan
+   terraform apply
+   ```
+
+4. Copy the displayed `static_ip` into an A record such as `app.yourdomain.com`. Wait until DNS resolves. Download the default Lightsail SSH key from the Lightsail console, then copy and create the production environment file:
+
+   ```shell
+   scp -i ~/Downloads/LightsailDefaultKey-eu-west-1.pem .env.production.example ubuntu@YOUR_STATIC_IP:/opt/priceswitch/
+   ssh -i ~/Downloads/LightsailDefaultKey-eu-west-1.pem ubuntu@YOUR_STATIC_IP
+   cp /opt/priceswitch/.env.production.example /opt/priceswitch/.env
+   chmod 600 /opt/priceswitch/.env
+   nano /opt/priceswitch/.env
+   ```
+
+   The first GitHub deployment uploads the application source code; the `.env` file remains only on the server.
+
+5. Create a dedicated deployment key locally, then add its public half to the server. Keep the private key for GitHub only:
+
+   ```shell
+   ssh-keygen -t ed25519 -f ~/.ssh/priceswitch_github_deploy -C "priceswitch-github-actions"
+   cat ~/.ssh/priceswitch_github_deploy.pub
+   ssh -i ~/Downloads/LightsailDefaultKey-eu-west-1.pem ubuntu@YOUR_STATIC_IP
+   echo "PASTE_THE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
+   ```
+
+6. In GitHub, create a `production` environment and add these environment secrets:
+
+   - `AWS_HOST` — the Lightsail static IP or app hostname
+   - `AWS_SSH_USER` — `ubuntu`
+   - `AWS_SSH_PRIVATE_KEY` — contents of `~/.ssh/priceswitch_github_deploy`
+   - `AWS_SSH_KNOWN_HOSTS` — output of `ssh-keyscan -H YOUR_STATIC_IP`
+
+   Run **Deploy production** manually from the Actions tab. The workflow uploads the repository without `.env`, rebuilds the Docker images, applies Prisma migrations, and starts the containers.
+
+7. Verify `https://app.yourdomain.com`, then update `application_url` and redirect URLs in `shopify.app.toml` to that HTTPS domain and run:
+
+   ```shell
+   yarn deploy -- --allow-updates
+   ```
+
+The instance bootstrap intentionally only installs Docker and prepares `/opt/priceswitch`; it does not contain secrets or clone the application.
+
 When you reach the step for [setting up environment variables](https://shopify.dev/docs/apps/deployment/web#set-env-vars), you also need to set the variable `NODE_ENV=production`.
 
 ## Gotchas / Troubleshooting

@@ -1,0 +1,6 @@
+# Copy this file to backend.hcl and replace the bucket name.
+bucket       = "replace-with-your-unique-state-bucket"
+key          = "priceswitch/production/terraform.tfstate"
+region       = "eu-west-1"
+encrypt      = true
+use_lockfile = true

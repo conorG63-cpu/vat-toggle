@@ -1,0 +1,6 @@
+aws_region        = "eu-west-1"
+availability_zone = "eu-west-1a"
+instance_name     = "priceswitch-production"
+bundle_id         = "small_3_0"
+blueprint_id      = "ubuntu_24_04"
+ssh_cidr          = "203.0.113.10/32"
