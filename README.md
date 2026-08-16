@@ -212,7 +212,11 @@ git init
 git remote remove origin 2>/dev/null || true
 git remote add origin https://github.com/conorG63-cpu/vat-toggle.git
 git fetch origin main
+sudo install -d -o ubuntu -g ubuntu -m 0755 /opt/priceswitch-backups
+tar --exclude='./.git' --exclude='./.env' -czf "/opt/priceswitch-backups/pre-auto-deploy-$(date +%Y%m%d%H%M%S).tar.gz" .
+git clean -fdx -e .env
 git checkout -B main origin/main
+docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
 sudo install -m 0755 infra/terraform/production/priceswitch-deploy.sh /usr/local/bin/priceswitch-deploy
 sudo install -m 0644 infra/terraform/production/priceswitch-deploy.service /etc/systemd/system/priceswitch-deploy.service
 sudo install -m 0644 infra/terraform/production/priceswitch-deploy.timer /etc/systemd/system/priceswitch-deploy.timer
