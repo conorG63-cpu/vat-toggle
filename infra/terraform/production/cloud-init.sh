@@ -1,5 +1,5 @@
-#!/bin/bash
-set -euxo pipefail
+#!/bin/sh
+set -eu
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
