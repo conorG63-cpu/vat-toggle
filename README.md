@@ -181,12 +181,12 @@ Terraform deliberately does **not** manage application secrets. Do not put Shopi
    echo "PASTE_THE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
    ```
 
-6. In GitHub, create a `production` environment and add these environment secrets:
+6. In GitHub, create a `production` environment and add one environment secret and three environment variables:
 
-   - `AWS_HOST` — the Lightsail static IP or app hostname
-   - `AWS_SSH_USER` — `ubuntu`
    - `AWS_SSH_PRIVATE_KEY` — contents of `~/.ssh/priceswitch_github_deploy`
-   - `AWS_SSH_KNOWN_HOSTS` — output of `ssh-keyscan -H YOUR_STATIC_IP`
+   - `AWS_HOST` (variable) — the Lightsail static IP or app hostname
+   - `AWS_SSH_USER` (variable) — `ubuntu`
+   - `AWS_SSH_KNOWN_HOSTS` (variable) — output of `ssh-keyscan -H YOUR_STATIC_IP`
 
    Run **Deploy production** manually from the Actions tab. The workflow uploads the repository without `.env`, rebuilds the Docker images, applies Prisma migrations, and starts the containers.
 

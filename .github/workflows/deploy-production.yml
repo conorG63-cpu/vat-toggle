@@ -20,7 +20,7 @@ jobs:
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.AWS_SSH_KNOWN_HOSTS }}
+          SSH_KNOWN_HOSTS: ${{ vars.AWS_SSH_KNOWN_HOSTS }}
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
@@ -29,8 +29,8 @@ jobs:
 
       - name: Upload and restart PriceSwitch
         env:
-          DEPLOY_HOST: ${{ secrets.AWS_HOST }}
-          DEPLOY_USER: ${{ secrets.AWS_SSH_USER }}
+          DEPLOY_HOST: ${{ vars.AWS_HOST }}
+          DEPLOY_USER: ${{ vars.AWS_SSH_USER }}
         run: |
           rsync -az --delete \
             --exclude '.env' \
